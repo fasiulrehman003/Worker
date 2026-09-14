@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WORKER — Physical Work Marketplace</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--blue:#2563eb;--dark:#0f172a;--muted:#64748b;--bg:#f8fafc;--card:#fff;--line:#e2e8f0;--green:#16a34a;--red:#dc2626}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:var(--bg);color:var(--dark)}
+button,input,select,textarea{font:inherit}.container{max-width:1150px;margin:auto;padding:0 20px}
+nav{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}.nav{min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:15px}.logo{font-weight:900;font-size:28px;color:var(--blue)}.logo span{color:var(--dark)}
+.navlinks{display:flex;gap:7px;flex-wrap:wrap;align-items:center}.navlinks button{border:0;background:transparent;padding:10px 12px;border-radius:9px;font-weight:700;cursor:pointer}.navlinks button:hover{background:#eff6ff}
+.btn{border:0;border-radius:10px;padding:11px 16px;font-weight:800;background:var(--blue);color:white;cursor:pointer}.btn.secondary{background:#eaf2ff;color:var(--blue)}.btn.red{background:var(--red)}
+.hero{background:linear-gradient(135deg,#0f172a,#1e3a8a);color:white;padding:65px 0}.hero h1{font-size:clamp(40px,6vw,68px);line-height:1;margin:12px 0}.hero p{font-size:18px;line-height:1.6;color:#dbeafe;max-width:700px}
+.section{padding:55px 0}.alt{background:#fff}.title{text-align:center;margin-bottom:28px}.title h2{font-size:34px;margin:0 0 7px}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card,.job,.worker{background:white;border:1px solid var(--line);border-radius:15px;padding:19px;box-shadow:0 5px 18px #0f172a0a}.jobs{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.jobtop{display:flex;justify-content:space-between;gap:12px}.price{font-weight:900;color:var(--green);font-size:19px}.tag{display:inline-block;background:#f1f5f9;border-radius:8px;padding:5px 8px;font-size:12px;font-weight:800}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.plans{display:grid;grid-template-columns:repeat(5,1fr);gap:13px}.plan{background:#fff;border:1px solid var(--line);border-radius:15px;padding:18px}.plan h3{margin-top:0}.amount{font-size:28px;font-weight:900}.notice{padding:14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;margin-top:16px}
+.modal{display:none;position:fixed;inset:0;background:#0f172a99;z-index:50;align-items:center;justify-content:center;padding:16px}.modal.show{display:flex}.modalbox{width:min(650px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:18px;padding:24px}.modalhead{display:flex;align-items:center;justify-content:space-between}.close{border:0;background:#f1f5f9;border-radius:50%;width:35px;height:35px;font-size:20px;cursor:pointer}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.full{grid-column:1/-1}.formgroup{margin:6px 0}.formgroup label{display:block;font-size:13px;font-weight:800;margin-bottom:5px}.field{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px;outline:none}.field:focus{border-color:var(--blue)}.status{margin-top:12px;padding:11px;border-radius:10px;display:none}.status.show{display:block}.status.ok{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0}.status.err{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
+.chat{height:320px;overflow:auto;background:#f8fafc;border-radius:12px;padding:12px}.msg{max-width:78%;padding:9px 11px;border-radius:12px;margin:7px 0;white-space:pre-wrap}.mine{margin-left:auto;background:#dbeafe}.theirs{background:#e2e8f0}.chatrow{display:flex;gap:8px;margin-top:10px}
+.profilebox{display:grid;grid-template-columns:1fr 1fr;gap:12px}.empty{padding:20px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
+footer{background:#0f172a;color:#cbd5e1;padding:35px 0;margin-top:0}
+@media(max-width:900px){.plans{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.nav{align-items:flex-start;padding:12px 20px}.navlinks{display:none}.jobs,.grid,.plans,.formgrid,.profilebox{grid-template-columns:1fr}.full{grid-column:auto}.hero{padding:48px 0}}
+</style>
+</head>
+<body>
+<nav><div class="container nav">
+  <div class="logo">WORK<span>ER</span></div>
+  <div class="navlinks">
+    <button onclick="scrollToId('jobs')">Find Jobs</button>
+    <button onclick="scrollToId('workers')">Find Workers</button>
+    <button onclick="openMessages()">Messages</button>
+    <button onclick="scrollToId('plans')">Plans</button>
+    <button id="accountBtn" onclick="openLogin()">Login</button>
+    <button id="joinBtn" class="btn" onclick="openRegister()">Join Free</button>
+  </div>
+</div></nav>
+
+<header class="hero"><div class="container">
+  <span>PHYSICAL WORK ONLY • WORLDWIDE</span>
+  <h1>Find local workers.<br>Get physical jobs done.</h1>
+  <p>WORKER connects people who need real-world work with local workers such as plumbers, electricians, cleaners, mechanics, movers and construction workers.</p>
+  <div class="actions"><button class="btn" onclick="openPost()">Post a Project</button><button class="btn secondary" onclick="scrollToId('workers')">Find a Worker</button></div>
+</div></header>
+
+<section class="section"><div class="container"><div class="title"><h2>How WORKER works</h2><p class="muted">Simple physical-work marketplace.</p></div>
+<div class="grid">
+<div class="card"><h3>📍 Post a project</h3><p class="muted">Describe the physical job, location, budget and timing.</p></div>
+<div class="card"><h3>🤝 Accept & message</h3><p class="muted">Workers can accept projects and users can message each other.</p></div>
+<div class="card"><h3>💵 Complete the work</h3><p class="muted">Arrange payment directly between client and worker according to your marketplace rules and local law.</p></div>
+</div></div></section>
+
+<section id="jobs" class="section alt"><div class="container"><div class="title"><h2>Latest physical jobs</h2><p class="muted">Live projects loaded from Supabase.</p></div><div id="jobList" class="jobs"></div></div></section>
+
+<section id="workers" class="section"><div class="container"><div class="title"><h2>Workers</h2><p class="muted">Registered WORKER users with Worker accounts appear here.</p></div><div id="workerList" class="grid"></div></div></section>
+
+<section id="plans" class="section alt"><div class="container"><div class="title"><h2>WORKER Plans</h2><p class="muted">Your planned subscription tiers.</p></div><div id="plansList" class="plans"></div></div></section>
+
+<footer><div class="container"><div class="logo">WORK<span style="color:white">ER</span></div><p>Worldwide marketplace for physical work.</p></div></footer>
+
+<!-- Register -->
+<div id="registerModal" class="modal"><div class="modalbox">
+<div class="modalhead"><h2>Create WORKER account</h2><button class="close" onclick="closeModal('registerModal')">×</button></div>
+<p class="muted">Registration is connected to Supabase Auth.</p>
+<div class="formgrid">
+<div class="formgroup"><label>Full name</label><input id="rName" class="field" placeholder="Your name"></div>
+<div class="formgroup"><label>Email</label><input id="rEmail" class="field" type="email" autocomplete="email" placeholder="you@example.com"></div>
+<div class="formgroup"><label>Account type</label><select id="rType" class="field"><option>Client</option><option>Worker</option></select></div>
+<div class="formgroup"><label>City / Country</label><input id="rLocation" class="field" placeholder="City / Country"></div>
+<div class="formgroup full"><label>Password</label><input id="rPassword" class="field" type="password" autocomplete="new-password" placeholder="At least 6 characters"></div>
+</div>
+<button id="registerBtn" class="btn" style="width:100%;margin-top:10px" onclick="register()">Create free account</button>
+<div id="registerStatus" class="status"></div>
+</div></div>
+
+<!-- Login -->
+<div id="loginModal" class="modal"><div class="modalbox">
+<div class="modalhead"><h2>Login</h2><button class="close" onclick="closeModal('loginModal')">×</button></div>
+<div class="formgroup"><label>Email</label><input id="loginEmail" class="field" type="email" autocomplete="email" placeholder="you@example.com"></div>
+<div class="formgroup"><label>Password</label><input id="loginPassword" class="field" type="password" autocomplete="current-password" placeholder="Your password"></div>
+<button id="loginBtn" class="btn" style="width:100%;margin-top:10px" onclick="login()">Login</button>
+<div id="loginStatus" class="status"></div>
+</div></div>
+
+<!-- Profile -->
+<div id="profileModal" class="modal"><div class="modalbox">
+<div class="modalhead"><h2>My Profile</h2><button class="close" onclick="closeModal('profileModal')">×</button></div>
+<div id="profileContent"></div>
+<div class="actions"><button class="btn" onclick="saveProfile()">Save Profile</button><button class="btn red" onclick="logout()">Logout</button></div>
+<div id="profileStatus" class="status"></div>
+</div></div>
+
+<!-- Messages -->
+<div id="messagesModal" class="modal"><div class="modalbox">
+<div class="modalhead"><h2>💬 Messages</h2><button class="close" onclick="closeModal('messagesModal')">×</button></div>
+<p class="muted">Messages are stored in the Supabase <code>messages</code> table.</p>
+<div id="conversationList"></div>
+<div id="chat" class="chat"><div class="empty">Select a conversation to load messages.</div></div>
+<div class="chatrow"><input id="messageInput" class="field" placeholder="Write a message"><button class="btn" onclick="sendMessage()">Send</button></div>
+</div></div>
+
+<!-- Post -->
+<div id="postModal" class="modal"><div class="modalbox">
+<div class="modalhead"><h2>📌 Post a physical project</h2><button class="close" onclick="closeModal('postModal')">×</button></div>
+<p class="muted">Your first project is intended to be free according to your WORKER rules.</p>
+<div class="formgrid">
+<div class="formgroup full"><label>Project title</label><input id="pTitle" class="field" placeholder="Need a plumber for bathroom repair"></div>
+<div class="formgroup"><label>Category</label><select id="pCategory" class="field"><option>Plumbing</option><option>Electrical</option><option>Cleaning</option><option>Mechanic</option><option>Moving</option><option>Construction</option><option>Other physical work</option></select></div>
+<div class="formgroup"><label>City / Country</label><input id="pLocation" class="field" placeholder="City / Country"></div>
+<div class="formgroup"><label>Budget</label><input id="pBudget" class="field" placeholder="$200"></div>
+<div class="formgroup"><label>When needed</label><input id="pDate" class="field" type="date"></div>
+<div class="formgroup full"><label>Work details</label><textarea id="pDetails" class="field" rows="5" placeholder="Describe the work and requirements"></textarea></div>
+</div>
+<button id="postBtn" class="btn" style="width:100%;margin-top:10px" onclick="postProject()">Publish Project</button>
+<div id="postStatus" class="status"></div>
+</div></div>
+
+<script>
+"use strict";
+const SUPABASE_URL="https://bwdqqfaefrgvyqeveuhu.supabase.co";
+const SUPABASE_ANON_KEY="sb_publishable_LEb0VkQuw6oGPvMQbgiS8A_u9gYOOuj";
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+let currentUser=null,currentProfile=null,selectedConversation=null,allProjects=[];
+
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+function scrollToId(id){document.getElementById(id)?.scrollIntoView({behavior:"smooth"});}
+function openModal(id){document.getElementById(id)?.classList.add("show");}
+function closeModal(id){document.getElementById(id)?.classList.remove("show");}
+function openRegister(){openModal("registerModal");}
+function openLogin(){openModal("loginModal");}
+function openPost(){if(!currentUser){openLogin();setStatus("loginStatus","Please log in before posting a project.");return;}openModal("postModal");}
+function setStatus(id,msg,ok=false){const e=document.getElementById(id);if(!e)return;e.textContent=msg;e.className="status show "+(ok?"ok":"err");}
+function clearStatus(id){const e=document.getElementById(id);if(e)e.className="status";}
+
+async function register(){
+ const name=document.getElementById("rName").value.trim(),email=document.getElementById("rEmail").value.trim(),
+ role=document.getElementById("rType").value.toLowerCase(),location=document.getElementById("rLocation").value.trim(),
+ password=document.getElementById("rPassword").value;
+ if(!name||!location||password.length<6||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){setStatus("registerStatus","Please enter your name, valid email, location and a password of at least 6 characters.");return;}
+ const btn=document.getElementById("registerBtn");btn.disabled=true;btn.textContent="Creating account...";clearStatus("registerStatus");
+ try{
+   const {data,error}=await sb.auth.signUp({email,password,options:{data:{full_name:name,role,location}}});
+   if(error)throw error;
+   if(data.session){currentUser=data.user;await loadProfile();updateAuthUI();setStatus("registerStatus","Account created successfully. You are logged in.",true);setTimeout(()=>closeModal("registerModal"),700);}
+   else setStatus("registerStatus","Account created. If email confirmation is enabled in Supabase, confirm your email before logging in.",true);
+ }catch(e){
+   let msg=e.message||String(e);
+   if(/rate limit/i.test(msg))msg="Supabase email rate limit reached. Stop repeated tests and try again later, or disable email confirmation in Supabase while testing.";
+   setStatus("registerStatus","Registration failed: "+msg);
+ }finally{btn.disabled=false;btn.textContent="Create free account";}
+}
+
+async function login(){
+ const email=document.getElementById("loginEmail").value.trim(),password=document.getElementById("loginPassword").value;
+ if(!email||!password){setStatus("loginStatus","Enter your email and password.");return;}
+ const btn=document.getElementById("loginBtn");btn.disabled=true;btn.textContent="Logging in...";
+ try{
+   const {data,error}=await sb.auth.signInWithPassword({email,password});if(error)throw error;
+   currentUser=data.user;await loadProfile();updateAuthUI();closeModal("loginModal");await loadProjects();
+ }catch(e){setStatus("loginStatus","Login failed: "+(e.message||String(e)));}
+ finally{btn.disabled=false;btn.textContent="Login";}
+}
+
+async function logout(){
+ await sb.auth.signOut();currentUser=null;currentProfile=null;selectedConversation=null;updateAuthUI();closeModal("profileModal");closeModal("messagesModal");renderJobs([]);renderWorkers([]);
+}
+function updateAuthUI(){
+ const b=document.getElementById("accountBtn"),j=document.getElementById("joinBtn");
+ if(currentUser){b.textContent="My Account";b.onclick=()=>openProfile();j.style.display="none";}
+ else{b.textContent="Login";b.onclick=openLogin;j.style.display="";}
+}
+async function loadProfile(){
+ if(!currentUser)return;
+ const {data,error}=await sb.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();
+ if(error)console.warn("Profile:",error.message);
+ currentProfile=data||{id:currentUser.id,full_name:currentUser.user_metadata?.full_name||"",role:currentUser.user_metadata?.role||"client",location:currentUser.user_metadata?.location||""};
+}
+function openProfile(){
+ if(!currentUser){openLogin();return;}
+ const p=currentProfile||{};
+ document.getElementById("profileContent").innerHTML=`
+ <div class="profilebox">
+ <div class="formgroup"><label>Full name</label><input id="pfName" class="field" value="${esc(p.full_name)}"></div>
+ <div class="formgroup"><label>Email</label><input class="field" value="${esc(currentUser.email)}" disabled></div>
+ <div class="formgroup"><label>Account type</label><select id="pfRole" class="field"><option value="client" ${p.role==="client"?"selected":""}>Client</option><option value="worker" ${p.role==="worker"?"selected":""}>Worker</option></select></div>
+ <div class="formgroup"><label>City / Country</label><input id="pfLocation" class="field" value="${esc(p.location)}"></div>
+ </div>`;
+ openModal("profileModal");
+}
+async function saveProfile(){
+ if(!currentUser)return;
+ const full_name=document.getElementById("pfName").value.trim(),role=document.getElementById("pfRole").value,location=document.getElementById("pfLocation").value.trim();
+ try{
+  const {error}=await sb.from("profiles").update({full_name,role,location}).eq("id",currentUser.id);
+  if(error)throw error;
+  currentProfile={...(currentProfile||{}),full_name,role,location};setStatus("profileStatus","Profile saved.",true);updateAuthUI();await loadWorkers();
+ }catch(e){setStatus("profileStatus","Could not save profile: "+e.message);}
+}
+
+function renderJobs(list){
+ const box=document.getElementById("jobList");
+ if(!list.length){box.innerHTML='<div class="empty" style="grid-column:1/-1">No open projects found.</div>';return;}
+ box.innerHTML=list.map(p=>`<article class="job">
+ <div class="jobtop"><div><span class="tag">${esc(p.category)}</span><h3>${esc(p.title)}</h3></div><div class="price">${esc(p.budget||"Negotiable")}</div></div>
+ <p class="muted">📍 ${esc(p.location)}</p><p>${esc(p.description)}</p>
+ <div class="actions"><button class="btn" onclick="acceptProject('${esc(p.id)}')">Accept Project</button><button class="btn secondary" onclick="startMessage('${esc(p.client_id)}')">Message Client</button></div>
+ </article>`).join("");
+}
+async function loadProjects(){
+ const {data,error}=await sb.from("projects").select("id,title,category,location,budget,description,status,client_id,created_at").eq("status","open").order("created_at",{ascending:false});
+ if(error){console.warn("Projects:",error.message);renderJobs([]);return;}
+ allProjects=data||[];renderJobs(allProjects);
+}
+async function postProject(){
+ if(!currentUser){openLogin();return;}
+ const title=document.getElementById("pTitle").value.trim(),category=document.getElementById("pCategory").value,
+ location=document.getElementById("pLocation").value.trim(),budget=document.getElementById("pBudget").value.trim(),
+ description=document.getElementById("pDetails").value.trim(),needed_date=document.getElementById("pDate").value||null;
+ if(!title||!location||!description){setStatus("postStatus","Complete the title, location and work details.");return;}
+ const btn=document.getElementById("postBtn");btn.disabled=true;btn.textContent="Saving...";
+ try{
+  const {error}=await sb.from("projects").insert({client_id:currentUser.id,title,category,location,budget,description,status:"open"});if(error)throw error;
+  closeModal("postModal");document.getElementById("pTitle").value="";document.getElementById("pLocation").value="";document.getElementById("pBudget").value="";document.getElementById("pDetails").value="";document.getElementById("pDate").value="";
+  await loadProjects();scrollToId("jobs");
+ }catch(e){setStatus("postStatus","Could not save project: "+e.message);}
+ finally{btn.disabled=false;btn.textContent="Publish Project";}
+}
+async function acceptProject(projectId){
+ if(!currentUser){openLogin();return;}
+ const p=allProjects.find(x=>String(x.id)===String(projectId));if(p?.client_id===currentUser.id){alert("You cannot accept your own project.");return;}
+ try{
+  const {data:existing,error:checkErr}=await sb.from("project_acceptances").select("id").eq("project_id",projectId).eq("worker_id",currentUser.id).maybeSingle();
+  if(checkErr)throw checkErr;if(existing){alert("You already applied to this project.");return;}
+  const {error}=await sb.from("project_acceptances").insert({project_id:projectId,worker_id:currentUser.id,status:"accepted"});if(error)throw error;
+  alert("Project accepted and saved to Supabase.");
+ }catch(e){alert("Could not accept project: "+e.message);}
+}
+
+async function loadWorkers(){
+ const box=document.getElementById("workerList");
+ const {data,error}=await sb.from("profiles").select("id,full_name,role,location").eq("role","worker").order("full_name");
+ if(error){box.innerHTML='<div class="empty">Workers could not be loaded. Check your profiles SELECT policy.</div>';return;}
+ renderWorkers(data||[]);
+}
+function renderWorkers(list){
+ const box=document.getElementById("workerList");
+ if(!list.length){box.innerHTML='<div class="empty" style="grid-column:1/-1">No worker profiles yet.</div>';return;}
+ box.innerHTML=list.map(w=>`<div class="worker"><h3>${esc(w.full_name||"Worker")}</h3><p class="muted">📍 ${esc(w.location||"Location not specified")}</p><span class="tag">Worker</span><div class="actions"><button class="btn secondary" onclick="startMessage('${esc(w.id)}')">Message</button></div></div>`).join("");
+}
+
+async function openMessages(){
+ if(!currentUser){openLogin();return;}
+ openModal("messagesModal");await loadConversations();
+}
+async function loadConversations(){
+ const box=document.getElementById("conversationList");
+ const {data,error}=await sb.from("messages").select("sender_id,receiver_id,created_at").or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`).order("created_at",{ascending:false});
+ if(error){box.innerHTML='<div class="empty">Messages could not be loaded. Check your messages RLS policies.</div>';return;}
+ const ids=[];for(const m of data||[]){const id=m.sender_id===currentUser.id?m.receiver_id:m.sender_id;if(id&&!ids.includes(id))ids.push(id);}
+ if(!ids.length){box.innerHTML='<div class="empty">No conversations yet. Message a worker or client from a project.</div>';return;}
+ const {data:profiles}=await sb.from("profiles").select("id,full_name").in("id",ids);
+ box.innerHTML=ids.map(id=>{const p=(profiles||[]).find(x=>x.id===id);return `<button class="btn secondary" style="margin:4px" onclick="selectConversation('${id}')">${esc(p?.full_name||"User")}</button>`}).join("");
+}
+async function startMessage(userId){
+ if(!currentUser){openLogin();return;}
+ if(String(userId)===String(currentUser.id)){alert("You cannot message yourself.");return;}
+ selectedConversation=userId;openModal("messagesModal");await loadConversations();await loadChat();
+}
+async function selectConversation(userId){selectedConversation=userId;await loadChat();}
+async function loadChat(){
+ const chat=document.getElementById("chat");
+ if(!selectedConversation){chat.innerHTML='<div class="empty">Select a conversation.</div>';return;}
+ const {data,error}=await sb.from("messages").select("id,sender_id,receiver_id,content,created_at").or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${selectedConversation}),and(sender_id.eq.${selectedConversation},receiver_id.eq.${currentUser.id})`).order("created_at",{ascending:true});
+ if(error){chat.innerHTML='<div class="empty">Could not load this conversation: '+esc(error.message)+'</div>';return;}
+ chat.innerHTML=(data||[]).map(m=>`<div class="msg ${m.sender_id===currentUser.id?"mine":"theirs"}">${esc(m.content)}</div>`).join("")||'<div class="empty">No messages yet.</div>';
+ chat.scrollTop=chat.scrollHeight;
+}
+async function sendMessage(){
+ const input=document.getElementById("messageInput"),content=input.value.trim();
+ if(!currentUser){openLogin();return;}if(!selectedConversation){alert("Select a conversation first.");return;}if(!content)return;
+ try{
+  const {error}=await sb.from("messages").insert({sender_id:currentUser.id,receiver_id:selectedConversation,content});
+  if(error)throw error;input.value="";await loadChat();await loadConversations();
+ }catch(e){alert("Message failed: "+e.message);}
+}
+
+function renderPlans(){
+ const plans=[["Starter","$100","20 projects / month"],["Professional","$150","30 projects / month"],["Business","$250","75 projects / month"],["Enterprise","$300","150 projects / month"],["Yearly","$3,500","Annual plan"]];
+ document.getElementById("plansList").innerHTML=plans.map((p,i)=>`<div class="plan"><h3>${p[0]}</h3><div class="amount">${p[1]}</div><p><b>${p[2]}</b></p><p class="muted">Project posting, worker discovery, messaging and project management.</p><button class="btn" style="width:100%" onclick="alert('Payment integration can be connected later.')">Choose plan</button></div>`).join("");
+}
+
+document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("show");}));
+document.addEventListener("DOMContentLoaded",async()=>{
+ renderPlans();
+ const {data}=await sb.auth.getSession();currentUser=data?.session?.user||null;
+ if(currentUser)await loadProfile();
+ updateAuthUI();await loadProjects();await loadWorkers();
+ sb.auth.onAuthStateChange(async(_event,session)=>{currentUser=session?.user||null;if(currentUser){await loadProfile();await loadWorkers();await loadProjects();}else{currentProfile=null;}updateAuthUI();});
+});
+window.openMessages=openMessages;window.startMessage=startMessage;window.selectConversation=selectConversation;window.sendMessage=sendMessage;
+window.register=register;window.login=login;window.logout=logout;window.saveProfile=saveProfile;window.openProfile=openProfile;
+window.postProject=postProject;window.acceptProject=acceptProject;window.openPost=openPost;window.openLogin=openLogin;window.openRegister=openRegister;
+window.openModal=openModal;window.closeModal=closeModal;window.scrollToId=scrollToId;
+</script>
+</body>
+</html>
