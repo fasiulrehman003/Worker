@@ -21,7 +21,92 @@ nav{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-
 footer{background:#0f172a;color:#cbd5e1;padding:35px 0;margin-top:0}
 @media(max-width:900px){.plans{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.nav{align-items:flex-start;padding:12px 20px}.navlinks{display:none}.jobs,.grid,.plans,.formgrid,.profilebox{grid-template-columns:1fr}.full{grid-column:auto}.hero{padding:48px 0}}
+
+.wf-desktop-nav{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 18px;padding:8px;background:#fff;border:1px solid #e7eaf0;border-radius:14px}
+.wf-desktop-nav button{border:0;background:transparent;padding:9px 11px;border-radius:9px;cursor:pointer;font-weight:600;font-size:12px}
+.wf-desktop-nav button:hover{background:#f1f4f8}
+@media(max-width:600px){.wf-desktop-nav{display:none}}
+
 </style>
+<style>
+/* WORKER full mobile feature layer */
+.worker-feature-hub{padding:28px 0;background:#f7f8fc}
+.worker-feature-grid{max-width:1180px;margin:auto;padding:0 18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.worker-feature-card{background:#fff;border:1px solid #e7eaf0;border-radius:18px;padding:20px;box-shadow:0 8px 28px rgba(15,23,42,.06)}
+.worker-feature-card h2{margin:0 0 8px}
+.wf-page{display:none}
+.wf-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.wf-toolbar input,.wf-toolbar select,.wf-toolbar button,.wf-input{min-height:44px;border:1px solid #d9dee8;border-radius:10px;padding:10px 12px;background:#fff}
+.wf-toolbar input{flex:1;min-width:180px}
+
+.wf-list{display:grid;gap:10px}
+.wf-item{border:1px solid #edf0f5;border-radius:13px;padding:13px}
+.wf-item strong{display:block;margin-bottom:5px}
+.wf-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.wf-badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef2ff;font-size:12px;font-weight:700}
+.wf-urgent{background:#fff0f0;color:#b42318}
+.wf-stars{letter-spacing:2px}
+.wf-portfolio{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.wf-portfolio-card{min-height:150px;border-radius:14px;background:linear-gradient(135deg,#eef2ff,#f8fafc);display:flex;align-items:center;justify-content:center;text-align:center;padding:12px}
+.wf-bottom{display:none}
+.wf-status{margin-top:10px;font-size:13px}
+.wf-muted{color:#667085;font-size:13px}
+@media(max-width:800px){
+  .worker-feature-grid{grid-template-columns:1fr;padding:0 12px}
+  
+  .wf-portfolio{grid-template-columns:repeat(2,1fr)}
+  .wf-bottom{display:flex;position:fixed;left:10px;right:10px;bottom:10px;z-index:10000;justify-content:space-around;padding:7px;border:1px solid #e5e7eb;border-radius:18px;background:rgba(255,255,255,.97);box-shadow:0 10px 30px rgba(15,23,42,.16)}
+  .wf-bottom button{border:0;background:transparent;padding:7px 9px;font-size:12px}
+  body{padding-bottom:76px}
+}
+</style>
+
+
+
+
+
+
+
+
+<style id="worker-integrated-style">
+.wk-dashboard{background:#f5f7fb;padding:24px 0 80px;border-top:1px solid #e6e9ef}
+.wk-container{max-width:1200px;margin:auto;padding:0 18px}
+.wk-topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:14px}
+.wk-topbar h1{margin:3px 0;font-size:30px}.wk-topbar p{margin:0;color:#667085}
+.wk-kicker{font-size:11px;font-weight:800;letter-spacing:.13em;color:#667085}
+.wk-btn{border:0;border-radius:10px;padding:11px 15px;background:#111827;color:#fff;cursor:pointer;font-weight:700}
+.wk-light{background:#eef1f6;color:#111827}
+.wk-nav{display:flex;gap:5px;overflow-x:auto;padding:7px;background:#fff;border:1px solid #e3e7ee;border-radius:14px;margin-bottom:18px;scrollbar-width:thin}
+.wk-nav button{border:0;background:transparent;white-space:nowrap;padding:9px 11px;border-radius:9px;cursor:pointer;font-weight:650;font-size:12px}
+.wk-nav button.active,.wk-nav button:hover{background:#eef2f7}
+.wk-page{display:none}.wk-page.active{display:block}
+.wk-hero,.wk-panel{background:#fff;border:1px solid #e3e7ee;border-radius:20px;padding:24px;box-shadow:0 8px 25px rgba(15,23,42,.05);margin-bottom:18px}
+.wk-hero h2{font-size:clamp(30px,5vw,54px);line-height:1.05;margin:10px 0;max-width:800px}
+.wk-hero p{max-width:800px;color:#667085;line-height:1.6;font-size:16px}
+.wk-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.wk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.wk-card{text-align:left;border:1px solid #e3e7ee;background:#fff;border-radius:16px;padding:18px;min-height:105px;cursor:pointer}
+.wk-card:hover{box-shadow:0 7px 18px rgba(15,23,42,.08);transform:translateY(-1px)}
+.wk-card b{display:block;margin-bottom:8px}.wk-card span{color:#667085;font-size:13px;line-height:1.4}
+.wk-toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}
+.wk-toolbar input,.wk-toolbar select,.wk-input{border:1px solid #d8dde6;border-radius:10px;padding:11px 12px;min-height:43px;box-sizing:border-box;background:#fff}
+.wk-toolbar input{flex:1;min-width:160px}.wk-input{width:100%;margin:5px 0 14px}.wk-panel label{display:block;font-size:13px;font-weight:700;margin-top:8px}
+.wk-list{display:grid;gap:10px}.wk-item{border:1px solid #e9ecf1;border-radius:12px;padding:14px}.wk-item strong{display:block;margin-bottom:6px}
+.wk-badge{display:inline-block;border-radius:999px;padding:4px 8px;background:#eef2ff;font-size:12px;font-weight:700}
+.wk-muted{color:#667085;font-size:13px}.wk-result{margin-top:12px;background:#f7f8fb;border-radius:10px;padding:12px}
+.wk-narrow{max-width:680px;margin-left:auto;margin-right:auto}
+.wk-mobile-nav{display:none}
+@media(max-width:950px){.wk-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){
+ .wk-dashboard{padding:16px 0 90px}.wk-container{padding:0 11px}
+ .wk-topbar{align-items:flex-start}.wk-account-actions{display:none}
+ .wk-nav{display:none}.wk-hero,.wk-panel{padding:18px;border-radius:16px}
+ .wk-grid{grid-template-columns:1fr}.wk-toolbar>*{width:100%;min-width:0}.wk-toolbar .wk-btn{width:100%}
+ .wk-mobile-nav{display:flex;position:fixed;z-index:10000;bottom:8px;left:8px;right:8px;justify-content:space-around;background:#fff;border:1px solid #e3e7ee;border-radius:17px;padding:7px;box-shadow:0 10px 28px rgba(15,23,42,.15)}
+ .wk-mobile-nav button{border:0;background:transparent;padding:6px 8px;font-size:11px}.wk-mobile-nav span{display:block;margin-top:2px}
+}
+</style>
+
 </head>
 <body>
 <nav><div class="container nav">
@@ -40,7 +125,7 @@ footer{background:#0f172a;color:#cbd5e1;padding:35px 0;margin-top:0}
   <span>PHYSICAL WORK ONLY • WORLDWIDE</span>
   <h1>Find local workers.<br>Get physical jobs done.</h1>
   <p>WORKER connects people who need real-world work with local workers such as plumbers, electricians, cleaners, mechanics, movers and construction workers.</p>
-  <div class="actions"><button class="btn" onclick="openPost()">Post a Project</button><button class="btn secondary" onclick="scrollToId('workers')">Find a Worker</button></div>
+  <div class="actions"><button class="btn" onclick="openPost()">Post a Project</button><button class="btn secondary" onclick="scrollToId('workers')">Find a Worker</button><button class="btn secondary" onclick="workerFeaturePage('jobs')">10 Features</button></div>
 </div></header>
 
 <section class="section"><div class="container"><div class="title"><h2>How WORKER works</h2><p class="muted">Simple physical-work marketplace.</p></div>
@@ -302,5 +387,318 @@ window.register=register;window.login=login;window.logout=logout;window.saveProf
 window.postProject=postProject;window.acceptProject=acceptProject;window.openPost=openPost;window.openLogin=openLogin;window.openRegister=openRegister;
 window.openModal=openModal;window.closeModal=closeModal;window.scrollToId=scrollToId;
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- WORKER SINGLE HOME / ALL FEATURES -->
+<section id="workerDashboard" class="wk-dashboard">
+  <div class="wk-container">
+    <header class="wk-topbar">
+      <div>
+        <div class="wk-kicker">WORKER</div>
+        <h1 id="wkTitle">Home</h1>
+        <p id="wkSubtitle">Physical work marketplace — everything in one place.</p>
+      </div>
+      <div class="wk-account-actions">
+        <button class="wk-btn wk-light" onclick="wkOpenRegister()">Create Account</button>
+        <button class="wk-btn" onclick="wkOpenLogin()">Login</button>
+      </div>
+    </header>
+
+    <nav class="wk-nav" aria-label="WORKER navigation">
+      <button class="active" data-wk-nav="home" onclick="wkShow('home')">Home</button>
+      <button data-wk-nav="jobs" onclick="wkShow('jobs')">Jobs</button>
+      <button data-wk-nav="estimate" onclick="wkShow('estimate')">Price Estimator</button>
+      <button data-wk-nav="workers" onclick="wkShow('workers')">Workers</button>
+      <button data-wk-nav="portfolio" onclick="wkShow('portfolio')">Portfolio</button>
+      <button data-wk-nav="reviews" onclick="wkShow('reviews')">Reviews</button>
+      <button data-wk-nav="share" onclick="wkShow('share')">Share</button>
+      <button data-wk-nav="language" onclick="wkShow('language')">Language</button>
+      <button data-wk-nav="verification" onclick="wkShow('verification')">Verification</button>
+      <button data-wk-nav="urgent" onclick="wkShow('urgent')">Urgent</button>
+      <button data-wk-nav="messages" onclick="wkOpenMessages()">Messages</button>
+      <button data-wk-nav="profile" onclick="wkOpenProfile()">Profile</button>
+      <button data-wk-nav="plans" onclick="wkOpenPlans()">Plans</button>
+    </nav>
+
+    <main>
+      <section class="wk-page active" data-wk-page="home">
+        <div class="wk-hero">
+          <div>
+            <span class="wk-kicker">PHYSICAL WORK ONLY</span>
+            <h2>Find skilled workers. Post real-world jobs.</h2>
+            <p>WORKER connects clients with plumbers, electricians, cleaners, mechanics, movers, construction workers and other physical-work professionals.</p>
+            <div class="wk-actions">
+              <button class="wk-btn" onclick="wkOpenRegister()">Create Account</button>
+              <button class="wk-btn wk-light" onclick="wkShow('jobs')">Find Jobs</button>
+              <button class="wk-btn wk-light" onclick="wkShow('workers')">Find Workers</button>
+              <button class="wk-btn wk-light" onclick="wkPostJob()">Post a Job</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="wk-grid">
+          <button class="wk-card" onclick="wkShow('jobs')"><b>📋 Jobs</b><span>Browse live projects from Supabase.</span></button>
+          <button class="wk-card" onclick="wkShow('estimate')"><b>💰 Price Estimator</b><span>Calculate a quick service estimate.</span></button>
+          <button class="wk-card" onclick="wkShow('workers')"><b>👷 Workers</b><span>Browse registered workers.</span></button>
+          <button class="wk-card" onclick="wkShow('portfolio')"><b>🖼️ Portfolio</b><span>View and manage work samples.</span></button>
+          <button class="wk-card" onclick="wkShow('reviews')"><b>⭐ Reviews</b><span>View and submit ratings.</span></button>
+          <button class="wk-card" onclick="wkShow('urgent')"><b>🚨 Urgent Jobs</b><span>Find jobs marked urgent.</span></button>
+          <button class="wk-card" onclick="wkShow('verification')"><b>🛡️ Verification</b><span>See account verification status.</span></button>
+          <button class="wk-card" onclick="wkShow('language')"><b>🌐 Language</b><span>English and Urdu preference.</span></button>
+          <button class="wk-card" onclick="wkShow('share')"><b>↗️ Share</b><span>Share WORKER with others.</span></button>
+          <button class="wk-card" onclick="wkOpenMessages()"><b>💬 Messages</b><span>Chat using Supabase.</span></button>
+          <button class="wk-card" onclick="wkOpenProfile()"><b>👤 Profile</b><span>Edit your account information.</span></button>
+          <button class="wk-card" onclick="wkOpenPlans()"><b>💳 Plans</b><span>View available plans.</span></button>
+        </div>
+      </section>
+
+      <section class="wk-page" data-wk-page="jobs">
+        <div class="wk-panel"><h2>📋 Jobs</h2>
+          <div class="wk-toolbar"><input id="wkJobSearch" placeholder="Search jobs, category or location"><select id="wkJobCategory"><option value="">All categories</option><option>Plumbing</option><option>Electrical</option><option>Cleaning</option><option>Mechanic</option><option>Moving</option><option>Construction</option></select><button class="wk-btn" onclick="wkLoadJobs()">Search</button></div>
+          <div id="wkJobsList" class="wk-list">Loading…</div>
+        </div>
+      </section>
+
+      <section class="wk-page" data-wk-page="estimate">
+        <div class="wk-panel wk-narrow"><h2>💰 Price Estimator</h2>
+          <label>Service</label><select id="wkService" class="wk-input"><option value="plumbing">Plumbing</option><option value="electrical">Electrical</option><option value="cleaning">Cleaning</option><option value="mechanic">Mechanic</option><option value="moving">Moving</option><option value="construction">Construction</option></select>
+          <label>Hours</label><input id="wkHours" class="wk-input" type="number" min="1" value="2">
+          <button class="wk-btn" onclick="wkEstimate()">Calculate</button><div id="wkEstimateResult" class="wk-result">Enter hours and calculate.</div>
+        </div>
+      </section>
+
+      <section class="wk-page" data-wk-page="workers">
+        <div class="wk-panel"><h2>👷 Workers</h2>
+          <div class="wk-toolbar"><input id="wkWorkerSearch" placeholder="Search worker or location"><button class="wk-btn" onclick="wkLoadWorkers()">Search</button></div>
+          <div id="wkWorkersList" class="wk-list">Loading…</div>
+        </div>
+      </section>
+
+      <section class="wk-page" data-wk-page="portfolio">
+        <div class="wk-panel"><h2>🖼️ Portfolio</h2>
+          <p class="wk-muted">Portfolio records are connected to Supabase when the optional <code>portfolio_items</code> table exists. The page also supports adding a work item with a title and image URL.</p>
+          <div class="wk-toolbar"><input id="wkPortfolioTitle" placeholder="Work title"><input id="wkPortfolioUrl" placeholder="Image URL (optional)"><button class="wk-btn" onclick="wkAddPortfolio()">Add Work</button></div>
+          <div id="wkPortfolioList" class="wk-list">Loading…</div>
+        </div>
+      </section>
+
+      <section class="wk-page" data-wk-page="reviews">
+        <div class="wk-panel"><h2>⭐ Reviews & Ratings</h2>
+          <div class="wk-toolbar"><input id="wkReviewWorker" placeholder="Worker ID for review"><input id="wkReviewRating" type="number" min="1" max="5" placeholder="Rating 1-5"><input id="wkReviewComment" placeholder="Comment"><button class="wk-btn" onclick="wkAddReview()">Submit Review</button></div>
+          <div id="wkReviewsList" class="wk-list">Loading…</div>
+        </div>
+      </section>
+
+      <section class="wk-page" data-wk-page="share">
+        <div class="wk-panel wk-narrow"><h2>↗️ Share WORKER</h2><p>Share this page with clients and workers.</p><div class="wk-actions"><button class="wk-btn" onclick="wkShare()">Share</button><button class="wk-btn wk-light" onclick="wkCopy()">Copy Link</button></div><div id="wkShareStatus" class="wk-result"></div></div>
+      </section>
+
+      <section class="wk-page" data-wk-page="language">
+        <div class="wk-panel wk-narrow"><h2>🌐 Language</h2><div class="wk-actions"><button class="wk-btn" onclick="wkLanguage('en')">English</button><button class="wk-btn wk-light" onclick="wkLanguage('ur')">اردو</button></div><p id="wkLanguageStatus">English selected.</p></div>
+      </section>
+
+      <section class="wk-page" data-wk-page="verification">
+        <div class="wk-panel wk-narrow"><h2>🛡️ Verification</h2><p>WORKER uses Supabase authentication for accounts. A verification badge is shown only when a verification field is actually stored in the user's profile.</p><div id="wkVerificationStatus" class="wk-result">Checking account…</div></div>
+      </section>
+
+      <section class="wk-page" data-wk-page="urgent">
+        <div class="wk-panel"><h2>🚨 Urgent Jobs</h2><div id="wkUrgentList" class="wk-list">Loading…</div></div>
+      </section>
+    </main>
+  </div>
+</section>
+
+<nav class="wk-mobile-nav">
+  <button onclick="wkShow('home')">🏠<span>Home</span></button>
+  <button onclick="wkShow('jobs')">📋<span>Jobs</span></button>
+  <button onclick="wkShow('estimate')">💰<span>Price</span></button>
+  <button onclick="wkShow('workers')">👷<span>Workers</span></button>
+  <button onclick="wkOpenMessages()">💬<span>Chat</span></button>
+</nav>
+
+
+<script id="worker-integrated-js">
+(function(){
+  const info={
+    home:['Home','Physical work marketplace — everything in one place.'],
+    jobs:['Jobs','Browse live projects from Supabase.'],
+    estimate:['Price Estimator','Calculate a quick service estimate.'],
+    workers:['Workers','Browse registered workers.'],
+    portfolio:['Portfolio','View and add work samples.'],
+    reviews:['Reviews','View and submit ratings.'],
+    share:['Share','Share WORKER with others.'],
+    language:['Language','Choose your language preference.'],
+    verification:['Verification','See your account verification status.'],
+    urgent:['Urgent Jobs','Browse jobs marked as urgent.']
+  };
+  let projectCache=[];
+
+  function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
+  function sbc(){return window.sb||window.supabaseClient||window.workerSupabase||null;}
+  function current(){return window.currentUser||window.user||null;}
+
+  window.wkShow=function(page){
+    document.querySelectorAll('[data-wk-page]').forEach(x=>x.classList.remove('active'));
+    const el=document.querySelector('[data-wk-page="'+page+'"]')||document.querySelector('[data-wk-page="home"]');
+    if(el)el.classList.add('active');
+    document.querySelectorAll('[data-wk-nav]').forEach(x=>x.classList.toggle('active',x.getAttribute('data-wk-nav')===page));
+    const i=info[page]||info.home;
+    document.getElementById('wkTitle').textContent=i[0];
+    document.getElementById('wkSubtitle').textContent=i[1];
+    if(page==='jobs'||page==='urgent')wkLoadJobs();
+    if(page==='workers')wkLoadWorkers();
+    if(page==='portfolio')wkLoadPortfolio();
+    if(page==='reviews')wkLoadReviews();
+    if(page==='verification')wkVerify();
+    document.getElementById('workerDashboard')?.scrollIntoView({behavior:'smooth',block:'start'});
+  };
+
+  window.wkOpenRegister=function(){
+    if(typeof openRegister==='function')return openRegister();
+    if(typeof showRegister==='function')return showRegister();
+    alert('Registration form is available in the original WORKER account section.');
+  };
+  window.wkOpenLogin=function(){
+    if(typeof openLogin==='function')return openLogin();
+    if(typeof showLogin==='function')return showLogin();
+    alert('Login form is available in the original WORKER account section.');
+  };
+  window.wkPostJob=function(){
+    if(typeof openPost==='function')return openPost();
+    if(typeof openPostProject==='function')return openPostProject();
+    alert('Please log in to post a project.');
+  };
+  window.wkOpenMessages=function(){
+    if(typeof openMessages==='function')return openMessages();
+    if(typeof showMessages==='function')return showMessages();
+    alert('Please log in to use messages.');
+  };
+  window.wkOpenProfile=function(){
+    if(typeof openProfile==='function')return openProfile();
+    if(typeof showProfile==='function')return showProfile();
+    alert('Please log in to edit your profile.');
+  };
+  window.wkOpenPlans=function(){
+    if(typeof openPlans==='function')return openPlans();
+    if(typeof showPlans==='function')return showPlans();
+    alert('Plans are displayed in the original WORKER section.');
+  };
+
+  window.wkEstimate=function(){
+    const rates={plumbing:35,electrical:40,cleaning:20,mechanic:45,moving:30,construction:50};
+    const s=document.getElementById('wkService').value,h=Math.max(1,Number(document.getElementById('wkHours').value)||1);
+    const low=rates[s]*h,high=Math.round(low*1.5);
+    document.getElementById('wkEstimateResult').innerHTML='<b>Estimated range: $'+low+' – $'+high+'</b><br><span class="wk-muted">Final price can vary by materials, travel and job complexity.</span>';
+  };
+
+  window.wkLoadJobs=async function(){
+    const c=sbc(),box=document.getElementById('wkJobsList'),urgent=document.getElementById('wkUrgentList');
+    if(!c){box.innerHTML='<div class="wk-item">Supabase client is not available.</div>';return;}
+    try{
+      const r=await c.from('projects').select('*').order('created_at',{ascending:false}).limit(100);
+      if(r.error)throw r.error;
+      projectCache=r.data||[];
+      const q=(document.getElementById('wkJobSearch')?.value||'').toLowerCase();
+      const cat=(document.getElementById('wkJobCategory')?.value||'').toLowerCase();
+      const filtered=projectCache.filter(p=>(!q||[p.title,p.description,p.location,p.category].join(' ').toLowerCase().includes(q))&&(!cat||String(p.category||'').toLowerCase()===cat));
+      box.innerHTML=filtered.length?filtered.map(p=>`<div class="wk-item"><strong>${esc(p.title||'Untitled job')}</strong><span class="wk-badge">${esc(p.category||'Physical work')}</span>${p.urgent===true?'<span class="wk-badge" style="margin-left:5px;background:#fff0f0;color:#b42318">URGENT</span>':''}<div class="wk-muted" style="margin-top:7px">📍 ${esc(p.location||'Not specified')} • 💵 ${esc(p.budget||'Not specified')}</div><p>${esc(p.description||'')}</p><button class="wk-btn" onclick="wkAccept('${esc(p.id)}')">Accept / Apply</button></div>`).join(''):'<div class="wk-item">No jobs found.</div>';
+      if(urgent){const u=projectCache.filter(p=>p.urgent===true);urgent.innerHTML=u.length?u.map(p=>`<div class="wk-item"><span class="wk-badge" style="background:#fff0f0;color:#b42318">URGENT</span> <strong>${esc(p.title)}</strong><div class="wk-muted">${esc(p.location||'')}</div></div>`).join(''):'<div class="wk-item">No urgent jobs are currently marked.</div>';}
+    }catch(e){box.innerHTML='<div class="wk-item">Jobs error: '+esc(e.message)+'</div>';}
+  };
+
+  window.wkAccept=async function(id){
+    if(typeof acceptProject==='function'){try{return await acceptProject(id);}catch(e){}}
+    const c=sbc(),u=current();if(!c||!u){alert('Please log in first.');return;}
+    try{
+      const r=await c.from('project_acceptances').insert({project_id:id,worker_id:u.id,status:'accepted'});
+      if(r.error)throw r.error;alert('Project accepted.');
+    }catch(e){alert('Could not accept project: '+e.message);}
+  };
+
+  window.wkLoadWorkers=async function(){
+    const c=sbc(),box=document.getElementById('wkWorkersList');if(!c)return;
+    try{
+      const r=await c.from('profiles').select('id,full_name,role,location').eq('role','worker').order('full_name').limit(100);
+      if(r.error)throw r.error;
+      const q=(document.getElementById('wkWorkerSearch')?.value||'').toLowerCase();
+      const a=(r.data||[]).filter(w=>!q||[w.full_name,w.location].join(' ').toLowerCase().includes(q));
+      box.innerHTML=a.length?a.map(w=>`<div class="wk-item"><strong>👷 ${esc(w.full_name||'Worker')}</strong><div class="wk-muted">📍 ${esc(w.location||'Not specified')}</div><span class="wk-badge">Worker</span><br><button class="wk-btn" style="margin-top:8px" onclick="wkMessage('${esc(w.id)}')">Message</button></div>`).join(''):'<div class="wk-item">No workers found.</div>';
+    }catch(e){box.innerHTML='<div class="wk-item">Workers error: '+esc(e.message)+'</div>';}
+  };
+  window.wkMessage=function(id){
+    if(typeof startMessage==='function')return startMessage(id);
+    wkOpenMessages();
+  };
+
+  window.wkLoadPortfolio=async function(){
+    const c=sbc(),box=document.getElementById('wkPortfolioList');if(!c)return;
+    try{
+      const r=await c.from('portfolio_items').select('*').order('created_at',{ascending:false}).limit(50);
+      if(r.error)throw r.error;
+      box.innerHTML=(r.data||[]).length?(r.data||[]).map(x=>`<div class="wk-item"><strong>${esc(x.title||'Work sample')}</strong>${x.image_url?`<img src="${esc(x.image_url)}" alt="" style="max-width:220px;width:100%;border-radius:10px;margin-top:8px">`:''}<div class="wk-muted">${esc(x.description||'')}</div></div>`).join(''):'<div class="wk-item">No portfolio items yet.</div>';
+    }catch(e){box.innerHTML='<div class="wk-item">Portfolio table is not ready yet. Create <code>portfolio_items</code> in Supabase to enable saved portfolio items.</div>';}
+  };
+  window.wkAddPortfolio=async function(){
+    const c=sbc(),u=current();if(!c||!u){alert('Please log in first.');return;}
+    try{
+      const r=await c.from('portfolio_items').insert({worker_id:u.id,title:document.getElementById('wkPortfolioTitle').value.trim(),image_url:document.getElementById('wkPortfolioUrl').value.trim()});
+      if(r.error)throw r.error;document.getElementById('wkPortfolioTitle').value='';document.getElementById('wkPortfolioUrl').value='';wkLoadPortfolio();
+    }catch(e){alert('Portfolio needs a Supabase portfolio_items table: '+e.message);}
+  };
+
+  window.wkLoadReviews=async function(){
+    const c=sbc(),box=document.getElementById('wkReviewsList');if(!c)return;
+    try{
+      const r=await c.from('reviews').select('*').order('created_at',{ascending:false}).limit(50);
+      if(r.error)throw r.error;
+      box.innerHTML=(r.data||[]).length?(r.data||[]).map(x=>`<div class="wk-item"><strong>${'★'.repeat(Math.max(0,Math.min(5,Number(x.rating)||0)))}${'☆'.repeat(5-Math.max(0,Math.min(5,Number(x.rating)||0)))}</strong><p>${esc(x.comment||x.review||'No comment')}</p></div>`).join(''):'<div class="wk-item">No reviews yet.</div>';
+    }catch(e){box.innerHTML='<div class="wk-item">Reviews error: '+esc(e.message)+'</div>';}
+  };
+  window.wkAddReview=async function(){
+    const c=sbc(),u=current();if(!c||!u){alert('Please log in first.');return;}
+    const worker=document.getElementById('wkReviewWorker').value.trim(),rating=Math.max(1,Math.min(5,Number(document.getElementById('wkReviewRating').value))),comment=document.getElementById('wkReviewComment').value.trim();
+    if(!worker||!rating){alert('Enter a worker ID and rating.');return;}
+    try{
+      const r=await c.from('reviews').insert({worker_id:worker,reviewer_id:u.id,rating,comment});
+      if(r.error)throw r.error;document.getElementById('wkReviewComment').value='';wkLoadReviews();
+    }catch(e){alert('Could not submit review: '+e.message);}
+  };
+
+  window.wkShare=async function(){
+    try{if(navigator.share)await navigator.share({title:'WORKER',text:'Find physical jobs and workers on WORKER',url:location.href});else await wkCopy();}catch(e){}
+  };
+  window.wkCopy=async function(){try{await navigator.clipboard.writeText(location.href);document.getElementById('wkShareStatus').textContent='Link copied.';}catch(e){document.getElementById('wkShareStatus').textContent='Copy is not available in this browser.';}};
+  window.wkLanguage=function(l){localStorage.setItem('worker_language',l);document.getElementById('wkLanguageStatus').textContent=l==='ur'?'اردو منتخب ہے۔':'English selected.';};
+  window.wkVerify=async function(){
+    const c=sbc(),u=current(),box=document.getElementById('wkVerificationStatus');
+    if(!c||!u){box.textContent='Log in to see your verification status.';return;}
+    try{
+      const r=await c.from('profiles').select('*').eq('id',u.id).single();
+      if(r.error)throw r.error;
+      const verified=r.data?.verified===true||r.data?.is_verified===true;
+      box.innerHTML=verified?'<b>✓ Verified</b><br><span class="wk-muted">Your profile contains a verification flag.</span>':'<b>Not verified</b><br><span class="wk-muted">No verification flag has been stored on this account.</span>';
+    }catch(e){box.textContent='Verification status could not be read from the profile.';}
+  };
+
+  document.addEventListener('DOMContentLoaded',function(){
+    wkShow('home');
+    wkLoadJobs();
+    wkLoadWorkers();
+    const l=localStorage.getItem('worker_language');if(l)wkLanguage(l);
+  });
+})();
+</script>
+
 </body>
 </html>
