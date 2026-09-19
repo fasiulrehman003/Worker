@@ -107,6 +107,144 @@ footer{background:#0f172a;color:#cbd5e1;padding:35px 0;margin-top:0}
 }
 </style>
 
+
+<style id="worker-mobile-perfect-tool-fix">
+html, body {
+  width:100% !important;
+  max-width:100% !important;
+  overflow-x:hidden !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+body { box-sizing:border-box; }
+*, *::before, *::after { box-sizing:border-box; }
+img, video, iframe, canvas { max-width:100%; height:auto; }
+button, input, select, textarea { max-width:100%; font:inherit; }
+
+@media (max-width: 700px) {
+  body { min-width:0 !important; font-size:14px !important; }
+  .wk-dashboard, #workerDashboard {
+    width:100% !important;
+    min-width:0 !important;
+    overflow-x:hidden !important;
+  }
+  .wk-container {
+    width:100% !important;
+    max-width:100% !important;
+    padding:12px !important;
+    margin:0 !important;
+  }
+  .wk-topbar {
+    width:100% !important;
+    max-width:100% !important;
+    min-height:58px !important;
+    gap:8px !important;
+    padding:10px 12px !important;
+    flex-wrap:wrap !important;
+  }
+  .wk-topbar > * { min-width:0 !important; }
+  .wk-brand { font-size:20px !important; }
+  .wk-hero {
+    width:100% !important;
+    min-height:auto !important;
+    padding:18px 14px !important;
+    margin:10px 0 !important;
+    border-radius:16px !important;
+  }
+  .wk-hero h1, .wk-hero h2 {
+    font-size:clamp(25px, 8vw, 36px) !important;
+    line-height:1.12 !important;
+    overflow-wrap:anywhere !important;
+  }
+  .wk-grid, .wk-feature-grid, .wk-cards, .wk-stats {
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    width:100% !important;
+    min-width:0 !important;
+  }
+  .wk-card, .wk-panel, .wk-item, .wk-section {
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+  }
+  .wk-actions, .wk-toolbar {
+    width:100% !important;
+    display:flex !important;
+    flex-wrap:wrap !important;
+    gap:8px !important;
+  }
+  .wk-actions > *, .wk-toolbar > * {
+    flex:1 1 140px !important;
+    min-width:0 !important;
+  }
+  .wk-toolbar input, .wk-toolbar select, .wk-toolbar button,
+  .wk-card input, .wk-card select, .wk-card textarea,
+  .wk-panel input, .wk-panel select, .wk-panel textarea {
+    width:100% !important;
+    min-width:0 !important;
+  }
+  .wk-table, table {
+    display:block !important;
+    width:100% !important;
+    overflow-x:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+  }
+  .wk-mobile-nav {
+    position:fixed !important;
+    left:8px !important; right:8px !important; bottom:8px !important;
+    width:auto !important;
+    max-width:none !important;
+    z-index:9998 !important;
+    display:grid !important;
+    grid-template-columns:repeat(5,1fr) !important;
+    gap:4px !important;
+    padding:7px !important;
+    border-radius:18px !important;
+  }
+  .wk-mobile-nav button {
+    min-width:0 !important;
+    padding:9px 3px !important;
+    font-size:11px !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+  }
+  #workerDashboard { padding-bottom:95px !important; }
+  .wk-modal, .modal, [role="dialog"] {
+    max-width:100vw !important;
+  }
+  .modal-content, .wk-modal-content {
+    width:calc(100vw - 24px) !important;
+    max-width:calc(100vw - 24px) !important;
+    max-height:88vh !important;
+    overflow:auto !important;
+    margin:12px auto !important;
+  }
+  #toolerModal {
+    padding:10px !important;
+    align-items:flex-end !important;
+  }
+  #toolerModal .tooler-box {
+    width:100% !important;
+    max-width:520px !important;
+    max-height:88vh !important;
+    overflow:auto !important;
+    border-radius:20px 20px 12px 12px !important;
+  }
+  #toolerText {
+    width:100% !important;
+    min-height:125px !important;
+    resize:vertical !important;
+  }
+  .tooler-tabs {
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:7px !important;
+  }
+  .tooler-tabs button { min-width:0 !important; }
+}
+</style>
+
 </head>
 <body>
 <nav><div class="container nav">
@@ -697,6 +835,238 @@ window.openModal=openModal;window.closeModal=closeModal;window.scrollToId=scroll
     wkLoadWorkers();
     const l=localStorage.getItem('worker_language');if(l)wkLanguage(l);
   });
+})();
+</script>
+
+
+<!-- TOOLER AI ASSISTANT: additive feature -->
+<button id="toolerFab" type="button" aria-label="Open Tooler AI assistant"
+  style="position:fixed;right:18px;bottom:88px;z-index:9997;border:0;border-radius:999px;padding:12px 16px;font-weight:800;cursor:pointer;box-shadow:0 8px 25px rgba(0,0,0,.18);">
+  🤖 Tooler
+</button>
+
+<div id="toolerModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.55);align-items:center;justify-content:center;padding:18px;">
+  <div class="tooler-box" style="background:#fff;width:min(560px,100%);border-radius:22px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.25);">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;">
+      <div>
+        <div style="font-size:22px;font-weight:900;">🤖 Tooler</div>
+        <div style="font-size:13px;opacity:.7;">Your WORKER work assistant</div>
+      </div>
+      <button id="toolerClose" type="button" style="border:0;background:#eee;border-radius:10px;padding:8px 11px;cursor:pointer;">✕</button>
+    </div>
+
+    <div class="tooler-tabs" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+      <button id="toolerClientTab" type="button" style="padding:11px;border:0;border-radius:12px;cursor:pointer;font-weight:800;">Client — Describe Work</button>
+      <button id="toolerWorkerTab" type="button" style="padding:11px;border:1px solid #ddd;border-radius:12px;background:#fff;cursor:pointer;font-weight:800;">Worker — Product Help</button>
+    </div>
+
+    <label id="toolerLabel" for="toolerText" style="display:block;font-weight:800;margin:8px 0;">Describe the work you need</label>
+    <textarea id="toolerText" placeholder="Example: I need a plumber to fix a leaking kitchen pipe..."
+      style="width:100%;min-height:135px;border:1px solid #ddd;border-radius:14px;padding:12px;outline:none;"></textarea>
+
+    <button id="toolerAsk" type="button" style="width:100%;margin-top:10px;padding:13px;border:0;border-radius:13px;cursor:pointer;font-weight:900;">
+      Ask Tooler
+    </button>
+
+    <div id="toolerResult" style="display:none;margin-top:12px;padding:13px;border-radius:14px;background:#f5f7fa;line-height:1.55;white-space:pre-wrap;"></div>
+  </div>
+</div>
+
+
+<script id="tooler-and-free-first-rule">
+(function(){
+  "use strict";
+
+  const $ = (id) => document.getElementById(id);
+  let toolerMode = "client";
+
+  function getUserSafe(){
+    try {
+      if (typeof currentUser !== "undefined" && currentUser) return currentUser;
+    } catch(e){}
+    return window.currentUser || null;
+  }
+
+  function getProfileSafe(){
+    try {
+      if (typeof currentProfile !== "undefined" && currentProfile) return currentProfile;
+    } catch(e){}
+    return window.currentProfile || null;
+  }
+
+  function usageKey(){
+    const u = getUserSafe();
+    return u && u.id ? "worker_usage_" + u.id : null;
+  }
+
+  function usageGet(){
+    const key = usageKey();
+    if (!key) return {clientPosts:0, workerAccepts:0};
+    try { return Object.assign({clientPosts:0,workerAccepts:0}, JSON.parse(localStorage.getItem(key)||"{}")); }
+    catch(e){ return {clientPosts:0,workerAccepts:0}; }
+  }
+
+  function usageSet(v){
+    const key = usageKey();
+    if (key) localStorage.setItem(key, JSON.stringify(v));
+  }
+
+  function role(){
+    const p = getProfileSafe();
+    return (p && p.role) || "";
+  }
+
+  function toolerOpen(){
+    const m=$("toolerModal");
+    if(m) m.style.display="flex";
+    updateToolerMode(toolerMode);
+  }
+  function toolerClose(){
+    const m=$("toolerModal");
+    if(m) m.style.display="none";
+  }
+  function updateToolerMode(mode){
+    toolerMode=mode;
+    const label=$("toolerLabel"), text=$("toolerText");
+    if(mode==="client"){
+      if(label) label.textContent="Describe the work you need";
+      if(text) text.placeholder="Example: I need a plumber to fix a leaking kitchen pipe...";
+    }else{
+      if(label) label.textContent="Describe the product/material used in the work";
+      if(text) text.placeholder="Example: I used PVC pipe and PTFE tape for a kitchen leak repair...";
+    }
+    const c=$("toolerClientTab"), w=$("toolerWorkerTab");
+    if(c) c.style.background=mode==="client" ? "#111827" : "#fff", c.style.color=mode==="client" ? "#fff" : "#111827";
+    if(w) w.style.background=mode==="worker" ? "#111827" : "#fff", w.style.color=mode==="worker" ? "#fff" : "#111827";
+    const r=$("toolerResult"); if(r) r.style.display="none";
+  }
+
+  function clientHelp(s){
+    s=s.trim();
+    if(!s) return "Tell me what work you need. Include the job type, location, problem, preferred time, and any important requirements.";
+    const lower=s.toLowerCase();
+    let trade="general worker";
+    if(/plumb|pipe|tap|water|leak/.test(lower)) trade="plumber";
+    else if(/electric|wiring|socket|light|switch/.test(lower)) trade="electrician";
+    else if(/clean|housekeep|wash/.test(lower)) trade="cleaner";
+    else if(/paint|wall|color/.test(lower)) trade="painter";
+    else if(/move|搬|furniture|transport/.test(lower)) trade="mover";
+    else if(/car|engine|brake|mechanic|vehicle/.test(lower)) trade="mechanic";
+    else if(/build|brick|cement|construction|concrete/.test(lower)) trade="construction worker";
+
+    return "Suggested work description:\n" +
+      "I need a " + trade + " for the following work:\n" + s +
+      "\n\nAdd these details before posting:\n• Exact location/area\n• What needs to be done or fixed\n• Preferred date/time\n• Budget or price range\n• Any tools/materials already available\n\nTooler tip: clear details help workers understand the job before accepting it.";
+  }
+
+  function workerHelp(s){
+    s=s.trim();
+    if(!s) return "Tell me the product/material/tool you used and what work you performed. I can help explain its purpose and basic use.";
+    const lower=s.toLowerCase();
+    let tip="Use the product according to its manufacturer instructions and the job requirements.";
+    if(/pvc|pipe|ptfe|teflon|seal/.test(lower)) tip="For plumbing work, these materials are commonly used for pipe joining/sealing. Make sure the connection size and compatibility are correct.";
+    else if(/cement|concrete|mortar/.test(lower)) tip="For construction work, explain where the material was used and follow the product mixing, curing, and safety instructions.";
+    else if(/paint|primer/.test(lower)) tip="For painting, describe the surface, preparation, primer/paint type, and number of coats. Follow the product label for application and drying.";
+    else if(/wire|cable|breaker|socket/.test(lower)) tip="For electrical work, identify the cable/component and its intended application. Electrical work should follow applicable safety standards and be handled by a qualified person when required.";
+    else if(/drill|saw|grinder|wrench|hammer/.test(lower)) tip="Describe the tool, material worked on, and task. Use the tool only as intended and follow its safety instructions.";
+    return "Product/work note:\n" + s + "\n\nTooler guidance:\n" + tip +
+      "\n\nFor your project description, mention the product name, what it was used for, and the result of the work.";
+  }
+
+  function askTooler(){
+    const text=($("toolerText")||{}).value||"";
+    const result=$("toolerResult");
+    if(!result) return;
+    result.textContent = toolerMode==="client" ? clientHelp(text) : workerHelp(text);
+    result.style.display="block";
+  }
+
+  function showLimit(roleName){
+    alert(roleName==="client"
+      ? "Your first project post is free. The second project requires a $10 payment."
+      : "Your first project acceptance is free. Your second work/project requires a $10 payment.");
+  }
+
+  // Expose safe helpers for the existing app.
+  window.workerUsageGet = usageGet;
+  window.workerUsageSet = usageSet;
+  window.workerCanUsePost = function(){ return usageGet().clientPosts < 1; };
+  window.workerCanAccept = function(){ return usageGet().workerAccepts < 1; };
+  window.showLimitMessage = showLimit;
+  window.openTooler = toolerOpen;
+
+  // Wrap existing post/accept functions without deleting them.
+  function wrapOnce(){
+    if(window.__toolerWrapped) return;
+    const oldPost = window.postProject;
+    const oldAccept = window.acceptProject;
+
+    if(typeof oldPost==="function"){
+      window.postProject = async function(){
+        const r=role();
+        const u=usageGet();
+        if(r==="client" && u.clientPosts>=1){
+          showLimit("client");
+          return;
+        }
+        const before=u.clientPosts;
+        const result=await oldPost.apply(this,arguments);
+        // Count only after the old function succeeds enough to clear its form.
+        const after=usageGet();
+        if(r==="client" && after.clientPosts===before){
+          after.clientPosts=before+1; usageSet(after);
+        }
+        return result;
+      };
+    }
+
+    if(typeof oldAccept==="function"){
+      window.acceptProject = async function(){
+        const r=role();
+        const u=usageGet();
+        if(r==="worker" && u.workerAccepts>=1){
+          showLimit("worker");
+          return;
+        }
+        const before=u.workerAccepts;
+        const result=await oldAccept.apply(this,arguments);
+        const after=usageGet();
+        if(r==="worker" && after.workerAccepts===before){
+          after.workerAccepts=before+1; usageSet(after);
+        }
+        return result;
+      };
+    }
+    window.__toolerWrapped=true;
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    $("toolerFab")?.addEventListener("click",toolerOpen);
+    $("toolerClose")?.addEventListener("click",toolerClose);
+    $("toolerClientTab")?.addEventListener("click",()=>updateToolerMode("client"));
+    $("toolerWorkerTab")?.addEventListener("click",()=>updateToolerMode("worker"));
+    $("toolerAsk")?.addEventListener("click",askTooler);
+    $("toolerModal")?.addEventListener("click",e=>{ if(e.target.id==="toolerModal") toolerClose(); });
+
+    // Existing app functions are defined before DOMContentLoaded in the uploaded file.
+    wrapOnce();
+    updateToolerMode("client");
+  });
+})();
+</script>
+
+
+<script id="worker-state-bridge">
+(function(){
+  function bridge(){
+    try{
+      if(typeof currentUser!=="undefined") window.currentUser=currentUser;
+      if(typeof currentProfile!=="undefined") window.currentProfile=currentProfile;
+      if(typeof sb!=="undefined") window.sb=sb;
+    }catch(e){}
+  }
+  document.addEventListener("DOMContentLoaded",bridge);
+  setInterval(bridge,1200);
 })();
 </script>
 
