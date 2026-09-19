@@ -245,6 +245,134 @@ button, input, select, textarea { max-width:100%; font:inherit; }
 }
 </style>
 
+
+<style id="worker-mobile-blank-screen-fix">
+/* Mobile shell fix: show the WORKER dashboard instead of the legacy page shell. */
+@media (max-width:700px){
+  html,body{
+    width:100%!important;
+    min-width:0!important;
+    margin:0!important;
+    padding:0!important;
+    overflow-x:hidden!important;
+    background:#f5f7fb!important;
+  }
+  body>nav:not(.wk-mobile-nav),
+  body>header,
+  body>footer,
+  body>section:not(#workerDashboard){
+    display:none!important;
+  }
+  #workerDashboard{
+    display:block!important;
+    width:100%!important;
+    min-height:100vh!important;
+    padding:12px 0 100px!important;
+    background:#f5f7fb!important;
+  }
+  #workerDashboard>.wk-container{
+    display:block!important;
+    width:100%!important;
+    max-width:none!important;
+    padding:0 12px!important;
+    margin:0!important;
+  }
+  #workerDashboard .wk-topbar{
+    display:flex!important;
+    min-height:64px!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    margin-bottom:12px!important;
+    padding:4px 2px!important;
+  }
+  #workerDashboard .wk-topbar h1{
+    display:block!important;
+    margin:2px 0!important;
+    font-size:26px!important;
+    color:#111827!important;
+  }
+  #workerDashboard .wk-topbar p{
+    display:block!important;
+    margin:2px 0!important;
+    color:#667085!important;
+    font-size:13px!important;
+  }
+  #workerDashboard .wk-nav{display:none!important;}
+
+  /* The JS below controls these inline styles, so navigation still works. */
+  #workerDashboard .wk-page{
+    width:100%!important;
+    min-height:0!important;
+  }
+  #workerDashboard .wk-page.active{
+    display:block!important;
+  }
+
+  #workerDashboard .wk-hero,
+  #workerDashboard .wk-panel{
+    width:100%!important;
+    max-width:none!important;
+    margin:0 0 14px!important;
+    padding:18px!important;
+    background:#fff!important;
+    border-radius:18px!important;
+    overflow:hidden!important;
+  }
+  #workerDashboard .wk-hero h2{
+    font-size:clamp(29px,8vw,42px)!important;
+    line-height:1.08!important;
+    margin:8px 0!important;
+    color:#111827!important;
+  }
+  #workerDashboard .wk-hero p{
+    font-size:14px!important;
+    line-height:1.55!important;
+  }
+  #workerDashboard .wk-grid{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:10px!important;
+  }
+  #workerDashboard .wk-card{
+    width:100%!important;
+    min-height:88px!important;
+  }
+  #workerDashboard .wk-actions{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:8px!important;
+  }
+  #workerDashboard .wk-actions .wk-btn{
+    width:100%!important;
+    min-height:44px!important;
+  }
+  .wk-mobile-nav{
+    display:grid!important;
+    grid-template-columns:repeat(5,1fr)!important;
+    position:fixed!important;
+    z-index:10000!important;
+    left:8px!important;
+    right:8px!important;
+    bottom:8px!important;
+    width:auto!important;
+    padding:7px!important;
+    background:#fff!important;
+    border:1px solid #e3e7ee!important;
+    border-radius:17px!important;
+    box-shadow:0 10px 28px rgba(15,23,42,.15)!important;
+  }
+  .wk-mobile-nav button{
+    min-width:0!important;
+    border:0!important;
+    background:transparent!important;
+    padding:7px 2px!important;
+    font-size:11px!important;
+    color:#111827!important;
+  }
+  .wk-mobile-nav span{display:block!important;margin-top:2px!important;}
+}
+</style>
+
 </head>
 <body>
 <nav><div class="container nav">
@@ -1067,6 +1195,56 @@ window.openModal=openModal;window.closeModal=closeModal;window.scrollToId=scroll
   }
   document.addEventListener("DOMContentLoaded",bridge);
   setInterval(bridge,1200);
+})();
+</script>
+
+
+<script id="worker-mobile-visibility-fix">
+(function(){
+  function forcePage(page){
+    var pages=document.querySelectorAll('#workerDashboard [data-wk-page]');
+    if(!pages.length) return;
+    pages.forEach(function(el){
+      var show=el.getAttribute('data-wk-page')===page;
+      el.classList.toggle('active',show);
+      el.style.setProperty('display',show?'block':'none','important');
+    });
+    var nav=document.querySelectorAll('#workerDashboard [data-wk-nav]');
+    nav.forEach(function(el){
+      el.classList.toggle('active',el.getAttribute('data-wk-nav')===page);
+    });
+  }
+
+  function install(){
+    if(!document.getElementById('workerDashboard')) return;
+
+    /* Guarantee that a page is visible even if another script failed earlier. */
+    var active=document.querySelector('#workerDashboard [data-wk-page].active');
+    forcePage(active ? active.getAttribute('data-wk-page') : 'home');
+
+    var original=window.wkShow;
+    if(!window.__workerMobileShowWrapped){
+      window.wkShow=function(page){
+        forcePage(page||'home');
+        try{
+          if(typeof original==='function') original(page);
+        }catch(e){
+          /* Keep the selected page visible even if an optional feature loader errors. */
+        }
+        forcePage(page||'home');
+      };
+      window.__workerMobileShowWrapped=true;
+    }
+
+    /* Re-apply after the original app finishes loading. */
+    setTimeout(function(){
+      var current=document.querySelector('#workerDashboard [data-wk-page].active');
+      forcePage(current ? current.getAttribute('data-wk-page') : 'home');
+    },500);
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install);
+  else install();
 })();
 </script>
 
