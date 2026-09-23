@@ -458,7 +458,7 @@ button, input, select, textarea { max-width:100%; font:inherit; }
 <div class="formgroup full"><label>Project title</label><input id="pTitle" class="field" placeholder="Need a plumber for bathroom repair"></div>
 <div class="formgroup"><label>Category</label><select id="pCategory" class="field"><option>Plumbing</option><option>Electrical</option><option>Cleaning</option><option>Mechanic</option><option>Moving</option><option>Construction</option><option>Other physical work</option></select></div>
 <div class="formgroup"><label>City / Country</label><input id="pLocation" class="field" placeholder="City / Country"></div>
-<div class="formgroup"><label>Budget</label><input id="pBudget" class="field" placeholder="$200"></div>
+<div class="formgroup"><label>Client project price / budget</label><input id="pBudget" class="field" inputmode="decimal" placeholder="$456"></div>
 <div class="formgroup"><label>When needed</label><input id="pDate" class="field" type="date"></div>
 <div class="formgroup full"><label>Work details</label><textarea id="pDetails" class="field" rows="5" placeholder="Describe the work and requirements"></textarea></div>
 </div>
@@ -552,7 +552,7 @@ function renderJobs(list){
  const box=document.getElementById("jobList");
  if(!list.length){box.innerHTML='<div class="empty" style="grid-column:1/-1">No open projects found.</div>';return;}
  box.innerHTML=list.map(p=>`<article class="job">
- <div class="jobtop"><div><span class="tag">${esc(p.category)}</span><h3>${esc(p.title)}</h3></div><div class="price">${esc(p.budget||"Negotiable")}</div></div>
+ <div class="jobtop"><div><span class="tag">${esc(p.category)}</span><h3>${esc(p.title)}</h3></div><div class="price">Client price: ${esc(formatClientPrice(p.budget||"Negotiable"))}</div></div>
  <p class="muted">📍 ${esc(p.location)}</p><p>${esc(p.description)}</p>
  <div class="actions"><button class="btn" onclick="acceptProject('${esc(p.id)}')">Accept Project</button><button class="btn secondary" onclick="startMessage('${esc(p.client_id)}')">Message Client</button></div>
  </article>`).join("");
@@ -771,8 +771,16 @@ window.openModal=openModal;window.closeModal=closeModal;window.scrollToId=scroll
       </section>
 
       <section class="wk-page" data-wk-page="language">
-        <div class="wk-panel wk-narrow"><h2>🌐 Language</h2><div class="wk-actions"><button class="wk-btn" onclick="wkLanguage('en')">English</button><button class="wk-btn wk-light" onclick="wkLanguage('ur')">اردو</button></div><p id="wkLanguageStatus">English selected.</p></div>
-      </section>
+         <div class="wk-panel wk-narrow"><h2>🌐 Language</h2>
+           <p class="wk-muted">Choose from 10 supported languages. Your preference is saved in Supabase when you are logged in.</p>
+           <select id="wkLanguageSelect" class="wk-input" onchange="wkLanguage(this.value)">
+             <option value="en">English</option><option value="ur">اردو</option><option value="ar">العربية</option>
+             <option value="es">Español</option><option value="fr">Français</option><option value="de">Deutsch</option>
+             <option value="zh">中文</option><option value="hi">हिन्दी</option><option value="tr">Türkçe</option><option value="pt">Português</option>
+           </select>
+           <p id="wkLanguageStatus">English selected.</p>
+         </div>
+       </section>
 
       <section class="wk-page" data-wk-page="verification">
         <div class="wk-panel wk-narrow"><h2>🛡️ Verification</h2><p>WORKER uses Supabase authentication for accounts. A verification badge is shown only when a verification field is actually stored in the user's profile.</p><div id="wkVerificationStatus" class="wk-result">Checking account…</div></div>
@@ -1245,6 +1253,83 @@ window.openModal=openModal;window.closeModal=closeModal;window.scrollToId=scroll
 
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install);
   else install();
+})();
+</script>
+
+
+<!-- WORKER SUPABASE RELIABILITY / LANGUAGES / MESSAGING LAYER -->
+<script id="worker-supabase-reliability-layer">
+(function(){
+"use strict";
+const LANG={
+en:["English selected.","Home","Jobs","Price Estimator","Workers","Portfolio","Reviews","Share","Language","Verification","Urgent Jobs","Messages","Profile","Plans"],
+ur:["اردو منتخب ہے۔","ہوم","کام","قیمت کا اندازہ","ورکرز","پورٹ فولیو","ریویوز","شیئر","زبان","تصدیق","فوری کام","پیغامات","پروفائل","پلانز"],
+ar:["تم اختيار العربية.","الرئيسية","الوظائف","تقدير السعر","العمال","الأعمال","التقييمات","مشاركة","اللغة","التحقق","وظائف عاجلة","الرسائل","الملف الشخصي","الخطط"],
+es:["Español seleccionado.","Inicio","Trabajos","Estimador de precios","Trabajadores","Portafolio","Reseñas","Compartir","Idioma","Verificación","Trabajos urgentes","Mensajes","Perfil","Planes"],
+fr:["Français sélectionné.","Accueil","Travaux","Estimateur de prix","Travailleurs","Portfolio","Avis","Partager","Langue","Vérification","Travaux urgents","Messages","Profil","Forfaits"],
+de:["Deutsch ausgewählt.","Start","Aufträge","Preisrechner","Arbeiter","Portfolio","Bewertungen","Teilen","Sprache","Verifizierung","Dringende Aufträge","Nachrichten","Profil","Pläne"],
+zh:["已选择中文。","首页","工作","价格估算","工人","作品集","评价","分享","语言","验证","紧急工作","消息","个人资料","套餐"],
+hi:["हिन्दी चुनी गई है।","होम","काम","कीमत अनुमान","वर्कर","पोर्टफोलियो","समीक्षाएँ","शेयर","भाषा","सत्यापन","तुरंत काम","संदेश","प्रोफ़ाइल","प्लान"],
+tr:["Türkçe seçildi.","Ana Sayfa","İşler","Fiyat Tahmini","Çalışanlar","Portföy","Yorumlar","Paylaş","Dil","Doğrulama","Acil İşler","Mesajlar","Profil","Planlar"],
+pt:["Português selecionado.","Início","Trabalhos","Estimador de preço","Trabalhadores","Portfólio","Avaliações","Compartilhar","Idioma","Verificação","Trabalhos urgentes","Mensagens","Perfil","Planos"]
+};
+function c(){return window.sb||null}
+function u(){try{return currentUser||window.currentUser}catch(e){return window.currentUser||null}}
+function esc(v){return String(v??"").replace(/[&<>"']/g,x=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[x]))}
+window.formatClientPrice=function(v){v=String(v??"").trim();if(!v)return"Not specified";return /^[\$€£₹¥₺₨]/.test(v)?v:/^\d+(\.\d+)?$/.test(v)?"$"+v:v};
+
+window.wkLanguage=async function(lang){
+ if(!LANG[lang])lang="en";localStorage.setItem("worker_language",lang);
+ const a=LANG[lang],sel=document.getElementById("wkLanguageSelect"),st=document.getElementById("wkLanguageStatus");
+ if(sel)sel.value=lang;if(st)st.textContent=a[0];
+ const keys=["home","jobs","estimate","workers","portfolio","reviews","share","language","verification","urgent","messages","profile","plans"];
+ document.querySelectorAll("#workerDashboard [data-wk-nav]").forEach(b=>{let i=keys.indexOf(b.getAttribute("data-wk-nav"));if(i>=0)b.textContent=a[i+1]});
+ const mob=document.querySelectorAll(".wk-mobile-nav button");
+ if(mob.length>=5){mob[0].innerHTML="🏠<span>"+a[1]+"</span>";mob[1].innerHTML="📋<span>"+a[2]+"</span>";mob[2].innerHTML="💰<span>"+a[3]+"</span>";mob[3].innerHTML="👷<span>"+a[4]+"</span>";mob[4].innerHTML="💬<span>"+a[11]+"</span>"}
+ const x=c(),me=u();if(x&&me){try{await x.from("profiles").update({preferred_language:lang}).eq("id",me.id)}catch(e){}}
+};
+
+async function convs(){
+ const x=c(),me=u(),box=document.getElementById("conversationList");if(!x||!me||!box)return;
+ const r=await x.from("messages").select("sender_id,receiver_id,created_at").or("sender_id.eq."+me.id+",receiver_id.eq."+me.id).order("created_at",{ascending:false});
+ if(r.error){box.innerHTML='<div class="empty">Messages could not load: '+esc(r.error.message)+'</div>';return}
+ const ids=[];(r.data||[]).forEach(m=>{let id=String(m.sender_id)===String(me.id)?m.receiver_id:m.sender_id;if(id&&!ids.includes(id))ids.push(id)});
+ if(!ids.length){box.innerHTML='<div class="empty">No conversations yet. Use Message on a worker or project.</div>';return}
+ const p=await x.from("profiles").select("id,full_name").in("id",ids);
+ box.innerHTML=ids.map(id=>{let q=(p.data||[]).find(z=>String(z.id)===String(id));return'<button class="btn secondary" style="margin:4px" onclick="selectConversation(\''+esc(id)+'\')">'+esc(q?.full_name||"User")+'</button>'}).join("");
+}
+async function chat(){
+ const x=c(),me=u(),other=window.selectedConversation,box=document.getElementById("chat");if(!x||!me||!other||!box)return;
+ const r=await x.from("messages").select("id,sender_id,receiver_id,content,created_at").or("and(sender_id.eq."+me.id+",receiver_id.eq."+other+"),and(sender_id.eq."+other+",receiver_id.eq."+me.id+")").order("created_at",{ascending:true});
+ if(r.error){box.innerHTML='<div class="empty">Could not load messages: '+esc(r.error.message)+'</div>';return}
+ box.innerHTML=(r.data||[]).map(m=>'<div class="msg '+(String(m.sender_id)===String(me.id)?"mine":"theirs")+'">'+esc(m.content)+'</div>').join("")||'<div class="empty">No messages yet.</div>';box.scrollTop=box.scrollHeight;
+}
+window.sendMessage=async function(){
+ const x=c(),me=u(),input=document.getElementById("messageInput"),text=(input?.value||"").trim();if(!me){openLogin();return}if(!window.selectedConversation){alert("Select a conversation first.");return}if(!text)return;
+ const r=await x.from("messages").insert({sender_id:me.id,receiver_id:window.selectedConversation,content:text});
+ if(r.error){alert("Message was not sent. Supabase error: "+r.error.message+"\n\nUse the supplied SQL setup to enable the messages table and RLS policies.");return}
+ input.value="";await chat();await convs();
+};
+window.openMessages=async function(){if(!u()){openLogin();return}openModal("messagesModal");await convs();await chat();subscribe()};
+window.startMessage=async function(id){if(!u()){openLogin();return}if(String(id)===String(u().id)){alert("You cannot message yourself.");return}window.selectedConversation=id;openModal("messagesModal");await convs();await chat();subscribe()};
+window.selectConversation=async function(id){window.selectedConversation=id;await chat()};
+let channel=null;
+async function subscribe(){const x=c(),me=u();if(!x||!me)return;try{if(channel)await x.removeChannel(channel);channel=x.channel("worker-messages-"+me.id).on("postgres_changes",{event:"INSERT",schema:"public",table:"messages",filter:"receiver_id=eq."+me.id},()=>{chat();convs()}).subscribe()}catch(e){}}
+
+window.postProject=async function(){
+ const x=c(),me=u();if(!me){openLogin();return}
+ const title=pTitle.value.trim(),category=pCategory.value,location=pLocation.value.trim(),description=pDetails.value.trim();let budget=pBudget.value.trim(),date=pDate.value||null;
+ if(!title||!location||!description||!budget){setStatus("postStatus","Enter the title, location, client price and work details.");return}
+ budget=window.formatClientPrice(budget);const b=postBtn;b.disabled=true;b.textContent="Publishing...";
+ try{const payload={client_id:me.id,title,category,location,budget,description,status:"open"};if(date)payload.needed_date=date;const r=await x.from("projects").insert(payload);if(r.error)throw r.error;
+ closeModal("postModal");["pTitle","pLocation","pBudget","pDetails","pDate"].forEach(id=>document.getElementById(id).value="");await loadProjects();if(window.wkLoadJobs)await window.wkLoadJobs();alert("Project posted. Client price: "+budget)
+ }catch(e){setStatus("postStatus","Could not save project: "+e.message)}finally{b.disabled=false;b.textContent="Publish Project"}
+};
+
+document.addEventListener("DOMContentLoaded",async()=>{
+ setTimeout(async()=>{let lang=localStorage.getItem("worker_language")||"en",me=u(),x=c();if(x&&me){try{let r=await x.from("profiles").select("preferred_language").eq("id",me.id).maybeSingle();if(!r.error&&r.data?.preferred_language)lang=r.data.preferred_language}catch(e){}}if(!LANG[lang])lang="en";await window.wkLanguage(lang)},350);
+ setTimeout(subscribe,900);
+});
 })();
 </script>
 
